@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('repuesto_materiales', function (Blueprint $table) {
+            $table->id('id_material');
+            $table->string('nombre', 100);
+            $table->float('precio');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('repuesto_materiales');
+    }
+};
