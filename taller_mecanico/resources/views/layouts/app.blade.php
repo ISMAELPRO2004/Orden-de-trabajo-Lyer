@@ -33,6 +33,7 @@
                 <ul class="navbar-nav ms-auto">
                     @auth
                         <li class="nav-item"><a class="nav-link" href="{{ route('clientes.index') }}">Clientes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('vehiculos.index') }}">Vehículos</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             Cerrar sesión
