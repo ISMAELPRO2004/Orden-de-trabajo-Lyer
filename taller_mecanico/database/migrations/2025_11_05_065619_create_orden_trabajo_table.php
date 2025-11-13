@@ -9,6 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orden_trabajo', function (Blueprint $table) {
+            // Aseguramos el motor InnoDB (necesario para claves foráneas)
+            $table->engine = 'InnoDB';
+
             $table->id('id_orden');
             $table->date('fecha_creacion');
             $table->integer('numero_orden');
@@ -26,11 +29,36 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario_creador');
             $table->unsignedBigInteger('id_usuario_responsable');
 
-            $table->foreign('id_estado_orden')->references('id_estado_orden')->on('estado_orden');
-            $table->foreign('id_cliente')->references('id_cliente')->on('cliente');
-            $table->foreign('id_vehiculo')->references('id_vehiculo')->on('vehiculo');
-            $table->foreign('id_usuario_creador')->references('id_usuario')->on('usuario');
-            $table->foreign('id_usuario_responsable')->references('id_usuario')->on('usuario');
+            // Definimos todas las claves foráneas con reglas claras
+            $table->foreign('id_estado_orden')
+                  ->references('id_estado_orden')
+                  ->on('estado_orden')
+                  ->cascadeOnUpdate()
+                  ->restrictOnDelete();
+
+            $table->foreign('id_cliente')
+                  ->references('id_cliente')
+                  ->on('cliente')
+                  ->cascadeOnUpdate()
+                  ->restrictOnDelete();
+
+            $table->foreign('id_vehiculo')
+                  ->references('id_vehiculo')
+                  ->on('vehiculo')
+                  ->cascadeOnUpdate()
+                  ->restrictOnDelete();
+
+            $table->foreign('id_usuario_creador')
+                  ->references('id_usuario')
+                  ->on('usuario')
+                  ->cascadeOnUpdate()
+                  ->restrictOnDelete();
+
+            $table->foreign('id_usuario_responsable')
+                  ->references('id_usuario')
+                  ->on('usuario')
+                  ->cascadeOnUpdate()
+                  ->restrictOnDelete();
 
             $table->timestamps();
         });
