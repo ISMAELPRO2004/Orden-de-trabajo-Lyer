@@ -15,7 +15,7 @@ use Inertia\Response;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Mostrar la vista de login (Inertia/Vue)
      */
     public function create(): Response
     {
@@ -26,26 +26,40 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Procesar el inicio de sesión
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->authenticate();
+        // Validar datos del formulario
+        $request->validate([
+            'usuario' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
 
+        // Intentar autenticación usando la tabla "usuario"
+        if (!Auth::attempt(
+            ['usuario' => $request->usuario, 'password' => $request->password],
+            $request->boolean('remember')
+        )) {
+            return back()->withErrors([
+                'usuario' => 'Las credenciales no coinciden con nuestros registros.',
+            ])->onlyInput('usuario');
+        }
+
+        // Regenerar sesión si el login es correcto
         $request->session()->regenerate();
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
-     * Destroy an authenticated session.
+     * Cerrar sesión
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');
